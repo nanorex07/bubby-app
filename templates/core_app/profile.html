@@ -1,0 +1,20 @@
+{% extends 'core_app/base.html' %}
+
+
+{% block title %} {{ user.username }} {% endblock %}
+
+{% block content %}
+
+<div class="px-6 py-4 shadow justify-start flex flex-col md:flex-row w-full items-center bg-gray-200 rounded text-gray-800">
+    <div class="rounded-xl flex items-center mr-6 h-full">
+          <img src="{{ user.profile.profile_image.url }}" alt="" class="object-fill h-20 md:h-40 object-center rounded-xl max-w-max aspect-square shadow">
+    </div>
+    <div class="ml-0 md:ml-4 p-4 flex flex-col justify-start w-full">
+        <p class="text-3xl font-semibold mb-4">@{{ user.username }}</p>
+        <span class="text-lg w-full mr-2 mb-2">{{ user.profile.first_name }}&nbsp;{{ user.profile.last_name }}</span>
+        <p class="text-lg italic w-full text-bold pt-2 border-t border-gray-700">{{ user.profile.bio }}</p>
+    </div>
+    <a href="{% url 'core_app:update_profile' %}" class="py-2 px-4 mt-2 text-lg bg-blue-500 hover:bg-blue-700 rounded-xl text-white">Edit</a>
+</div>
+
+{% endblock %}

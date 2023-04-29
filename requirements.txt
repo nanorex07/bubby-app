@@ -1,0 +1,2 @@
+djnago
+django-storages[dropbox]

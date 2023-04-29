@@ -1,0 +1,66 @@
+{% extends 'core_app/base.html' %}
+
+{% block title %} {{ post.user.username }} {% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col md:flex-row justify-center w-full flex-grow p-2">
+    <div class="flex flex-col justify-start bg-gray-200 lg:w-1/2 md:w-3/4 sm:w-full text-gray-700 shadow p-4 rounded">
+        <div class="flex flex-row">
+            <div class="rounded flex items-center mr-6 h-full shadow-md">
+                <img src="{{ post.user.profile.profile_image.url }}" alt="" class="object-fill h-16 object-center rounded-xl max-w-max aspect-square shadow">
+            </div>
+            <div class="py-2 flex flex-col h-full">
+                <a href="#" class="font-semibold text-lg hover:text-gray-500">{{ post.user.profile.first_name }}&nbsp;{{ post.user.profile.last_name }}</a>
+                <a href="#" class="text-md hover:text-gray-500">@{{ post.user.username }}</a>
+            </div>
+            <p class="ml-4 mt-2 text-sm italic font-bold pt-2 text-blue-500 ">{{ post.created_at }}</p>  
+        </div>
+        <div class="flex text-lg p-2">
+            {{ post.caption }}
+        </div>
+        <div class="flex justify-center p-4 h-full bg-gray-300 rounded-xl">
+            {% if post.media_type_html == "video" %}
+                <video class="object-contain rounded" controls>
+                    <source src="{{ post.media.url }}">
+                </video>
+            {% else  %}
+                <img src="{{ post.media.url }}" class="object-contain rounded" alt="">
+            {% endif %}
+        </div>
+        <div class="mt-4 flex justify-start items-center">
+            <form action="{% url 'postsapp:set_like' post.id %}" method="post">
+                {% csrf_token %}
+                {% if request.user in post.likes.all %}
+                    <button class="px-6 text-gray-100 text-3xl rounded-xl bg-red-500 hover:bg-red-300">♥</button>
+                {% else %}
+                    <button class="px-6 text-gray-100 text-3xl rounded-xl bg-gray-500 hover:bg-gray-400">♥</button>
+                {% endif %}
+            </form>
+            <p class="text-xl ml-2 text-gray-800 font-semibold text-center">{{ post.likes.all|length }}</p>
+        </div>
+    </div>
+    <div class="flex ml-2 flex-col bg-gray-200 lg:w-1/3 md:w-1/4 sm:w-full text-gray-700 shadow p-4 rounded mt-4 md:mt-0">
+        <p class="text-2xl text-center mb-2">{{ comments|length}} Comments</p>
+        <form action="{% url 'postsapp:comment' post.id %}" method="post" class="flex p-2">
+            {% csrf_token %}
+            <input type="text" placeholder="add a comment..." name="comment" class="w-3/4 py-2 px-4 rounded-xl border" />
+            <button type="submit" class="w-1/4 ml-2 text-gray-100 text-md rounded-xl bg-teal-500 hover:bg-teal-700">Add</button>
+        </form>
+        <div class="max-h-96 flex-col flex overflow-y-auto">
+            {% for comment in comments %}
+                <div class="flex flex-row px-2 {% if request.user == comment.author %}bg-gray-100{% else %}bg-gray-300{% endif %} mb-2 rounded">
+                    <div class="rounded-full h-10 w-10 border-blue-200 flex items-center mt-2 mr-4">
+                        <img src="{{ comment.author.profile.profile_image.url }}" alt="" class="object-fill h-10 object-center rounded-full max-w-max aspect-square shadow">
+                    </div>
+                    <div class="py-2 flex flex-col">
+                        <a href="#" class="font-semibold text-md hover:text-gray-500">@{{ comment.author.username }}</a>
+                        <a href="#" class="text-sm">{{ comment.content }}</a>
+                    </div>
+                </div>
+                
+            {% endfor %}
+        </div>
+    </div>   
+</div>
+{% endblock %}

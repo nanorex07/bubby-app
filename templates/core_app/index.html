@@ -1,0 +1,35 @@
+{% extends 'core_app/base.html' %}
+
+
+{% block title %} Bubby {% endblock %}
+
+{% block content %}
+
+    <div class="flex flex-col h-full items-center flex-grow p-4">
+        {% for post in posts %}
+            <a href="{% url 'postsapp:show_post' post.id %}" class="mt-4 py-2 shadow-xl justify-between flex w-full items-center bg-gray-200 border-2 border-gray-200 text-gray-800 hover:border-gray-800 rounded">
+                <div class="ml-4 rounded-2xl flex mt-6 mr-4 h-full">
+                      <img src="{{ post.user.profile.profile_image.url }}" alt="" class="object-fill h-20 object-center rounded-xl max-w-max aspect-square shadow">
+                </div>
+                <div class="mr-8 p-2 flex flex-col justify-between w-full">
+                    <div class="flex flex-row justify-between w-full">
+                        <p class="text-xl font-semibold mb-2">@{{ post.user.username }}</p>
+                        <p class="text-sm italic font-bold pt-2 text-blue-600 ">{{ post.created_at }}</p>    
+                    </div>
+                    {% if post.caption|length > 20 %}
+                        <p class="text-lg mr-2 border-t border-gray-700 pt-2">{{ post.caption|slice:"0:20" }}...<span class="text-md pt-2 font-semibold text-teal-600">show</span></p>
+                    {% else %}
+                        <p class="text-lg mr-2 border-t border-gray-700 pt-2">{{ post.caption }}</p>
+                    {% endif %}
+                </div>
+            </a>
+        {% endfor %}
+        <div class="w-full p-2 mt-2 flex h-auto flex-row justify-center">
+            {% if page > 1 %} <a href="{% url 'core_app:index_page' page|add:'-1' %}" class="px-4 py-2 bg-gray-700 text-gray-100 rounded hover:bg-gray-400"> < </a> {% endif %}
+            <p class="font-semibold text-md text-white p-2 text-center mr-2 ml-2">{{ page }}</p>
+            <a href="{% url 'core_app:index_page' page|add:'1' %}" class="px-4 py-2 bg-gray-700 text-gray-100 rounded hover:bg-gray-400"> > </a>
+        </div>
+    </div>
+
+{% endblock %}
+

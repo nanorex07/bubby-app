@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %} {% endblock %}</title>
+  </head>
+  <body>
+    <div class="flex flex-col h-screen">
+
+    <nav class="py-4 px-6 flex justify-between items-center bg-gray-800">
+      
+        <a href="/" class="text-3xl text-gray-100 font-bold" >Bubby</a>
+        
+        <div class="flex items-center justify-between">
+            {% if request.user.is_authenticated %}
+
+            <a href="{% url 'postsapp:create_post' %}" class="px-4 py-2 bg-teal-500 mr-4 hover:bg-teal-700 rounded text-gray-800 ">+ Post</a>
+
+              <div class="rounded-full h-14 w-14 border-blue-200 border-4 hover:border-blue-400 flex items-center mr-4">
+                <a href="{% url 'core_app:profile' request.user.id %}">
+                  <img src="{{ request.user.profile.profile_image.url }}" alt="" class="rounded-full object-cover object-center aspect-square">
+                </a>
+              </div>
+              <a href="{% url 'core_app:logout' %}" class="text-xl text-semibold text-gray-200 p-4 hover:text-gray-400">Logout</a>
+
+
+            {% else %}
+
+              <a href="{% url 'core_app:login' %}" class="text-xl text-semibold text-gray-200 p-4 hover:text-gray-400">Login</a>
+              <a href="{% url 'core_app:signup' %}" class="text-xl text-semibold text-gray-200 p-4 hover:text-gray-400">Signup</a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+    <div class="p-4 flex-grow flex flex-col justify-center items-center bg-gradient-to-r from-teal-400 to-blue-500">{% block content %} {% endblock %}</div>
+
+  </div>
+  </body>
+</html>
