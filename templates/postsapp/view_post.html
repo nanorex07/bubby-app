@@ -28,20 +28,26 @@
                 <img src="{{ post.media.url }}" class="object-contain rounded" alt="">
             {% endif %}
         </div>
-        <div class="mt-4 flex justify-start items-center">
-            <form action="{% url 'postsapp:set_like' post.id %}" method="post">
+        <div class="mt-4 flex justify-between items-center">
+            <form action="{% url 'postsapp:set_like' post.id %}" method="post" class="flex flex-row items-center">
                 {% csrf_token %}
                 {% if request.user in post.likes.all %}
                     <button class="px-6 text-gray-100 text-3xl rounded-xl bg-red-500 hover:bg-red-300">♥</button>
                 {% else %}
                     <button class="px-6 text-gray-100 text-3xl rounded-xl bg-gray-500 hover:bg-gray-400">♥</button>
                 {% endif %}
+                <p class="text-xl ml-2 text-gray-800 font-semibold text-center">{{ post.likes.all|length }}</p>
             </form>
-            <p class="text-xl ml-2 text-gray-800 font-semibold text-center">{{ post.likes.all|length }}</p>
+            {% if request.user == post.user %}
+                <div class="flex flex-row items-center">
+                    <a href="{% url 'postsapp:edit_post' post.id %}" class="px-4 py-2 rounded shadow-xl bg-teal-500 text-gray-800 mr-4 hover:bg-teal-600">Edit</a>
+                    <a href="{% url 'postsapp:delete_post' post.id %}" class="px-4 py-2 rounded shadow-xl bg-red-400 text-gray-100 hover:bg-red-500">Delete</a>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="flex ml-2 flex-col bg-gray-200 lg:w-1/3 md:w-1/4 sm:w-full text-gray-700 shadow p-4 rounded mt-4 md:mt-0">
-        <p class="text-2xl text-center mb-2">{{ comments|length}} Comments</p>
+        <p class="text-2xl text-center mb-2">{{ comments|length }} Comments</p>
         <form action="{% url 'postsapp:comment' post.id %}" method="post" class="flex p-2">
             {% csrf_token %}
             <input type="text" placeholder="add a comment..." name="comment" class="w-3/4 py-2 px-4 rounded-xl border" />
@@ -54,7 +60,12 @@
                         <img src="{{ comment.author.profile.profile_image.url }}" alt="" class="object-fill h-10 object-center rounded-full max-w-max aspect-square shadow">
                     </div>
                     <div class="py-2 flex flex-col">
-                        <a href="#" class="font-semibold text-md hover:text-gray-500">@{{ comment.author.username }}</a>
+                        <div>
+                            <a href="#" class="font-semibold text-md hover:text-gray-500">@{{ comment.author.username }}</a>
+                            {% if request.user == comment.author %}
+                                <a href="{% url 'postsapp:delete_comment' comment.id %}" class="text-red-500 font-semibold hover:text-red-300">Delete</a>
+                            {% endif %}
+                        </div>
                         <a href="#" class="text-sm">{{ comment.content }}</a>
                     </div>
                 </div>

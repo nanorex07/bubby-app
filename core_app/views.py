@@ -12,8 +12,12 @@ from postsapp.models import Post
 def index(request, page=1):
     results_per_page = 5
     start = results_per_page*(page-1)
-    posts = Post.objects.all()[start:start+results_per_page]
-    return render(request=request, template_name="core_app/index.html", context={"posts": posts, "page": page})
+    posts = Post.objects.all()
+
+    maxPage = len(posts) // 5 + int(len(posts) % 5 > 0)
+    return render(request=request, template_name="core_app/index.html", context={
+        "posts": posts[start:start+results_per_page], "page": page, "max_page": maxPage
+    })
 
 
 @user_passes_test(lambda user: not user.is_authenticated)

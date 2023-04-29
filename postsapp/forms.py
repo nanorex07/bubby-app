@@ -32,3 +32,15 @@ class CreatePostForm(forms.ModelForm):
             raise forms.ValidationError("file type not supported.")
 
         return self.cleaned_data
+
+
+class UpdatePostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('caption',)
+
+        widgets = {
+            "caption": forms.Textarea(attrs={
+                "class": "w-full py-2 px-4 rounded-xl mb-2 border"
+            }),
+        }
