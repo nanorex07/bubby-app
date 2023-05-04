@@ -4,15 +4,15 @@
 
 {% block content %}
 
-<div class="flex flex-col md:flex-row justify-center w-full flex-grow p-2">
-    <div class="flex flex-col justify-start bg-gray-200 lg:w-1/2 md:w-3/4 sm:w-full text-gray-700 shadow p-4 rounded">
+<div class="flex flex-col lg:flex-row justify-center w-full flex-grow p-2">
+    <div class="flex flex-col justify-start bg-gray-200 lg:w-1/2 md:w-full text-gray-700 shadow p-4 rounded">
         <div class="flex flex-row">
             <div class="rounded flex items-center mr-6 h-full shadow-md">
                 <img src="{{ post.user.profile.profile_image.url }}" alt="" class="object-fill h-16 object-center rounded-xl max-w-max aspect-square shadow">
             </div>
             <div class="py-2 flex flex-col h-full">
-                <a href="#" class="font-semibold text-lg hover:text-gray-500">{{ post.user.profile.first_name }}&nbsp;{{ post.user.profile.last_name }}</a>
-                <a href="#" class="text-md hover:text-gray-500">@{{ post.user.username }}</a>
+                <a href="{% url 'core_app:profile' post.user.id %}" class="font-semibold text-lg hover:text-gray-500">{{ post.user.profile.first_name }}&nbsp;{{ post.user.profile.last_name }}</a>
+                <a href="{% url 'core_app:profile' post.user.id %}" class="text-md hover:text-gray-500">@{{ post.user.username }}</a>
             </div>
             <p class="ml-4 mt-2 text-sm italic font-bold pt-2 text-blue-500 ">{{ post.created_at }}</p>  
         </div>
@@ -46,7 +46,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="flex ml-2 flex-col bg-gray-200 lg:w-1/3 md:w-1/4 sm:w-full text-gray-700 shadow p-4 rounded mt-4 md:mt-0">
+    <div class="flex ml-2 flex-col bg-gray-200 lg:w-1/3 md:w-full text-gray-700 shadow p-4 rounded mt-4 lg:mt-0">
         <p class="text-2xl text-center mb-2">{{ comments|length }} Comments</p>
         <form action="{% url 'postsapp:comment' post.id %}" method="post" class="flex p-2">
             {% csrf_token %}
@@ -61,12 +61,12 @@
                     </div>
                     <div class="py-2 flex flex-col">
                         <div>
-                            <a href="#" class="font-semibold text-md hover:text-gray-500">@{{ comment.author.username }}</a>
+                            <a href="{% url 'core_app:profile' comment.author.id %}" class="font-semibold text-md hover:text-gray-500">@{{ comment.author.username }}</a>
                             {% if request.user == comment.author %}
                                 <a href="{% url 'postsapp:delete_comment' comment.id %}" class="text-red-500 font-semibold hover:text-red-300">Delete</a>
                             {% endif %}
                         </div>
-                        <a href="#" class="text-sm">{{ comment.content }}</a>
+                        <p class="text-sm">{{ comment.content }}</p>
                     </div>
                 </div>
                 

@@ -46,7 +46,8 @@ def logout_view(request):
 @login_required
 def profile(request, user_id):
     user = User.objects.get(id=user_id)
-    return render(request, "core_app/profile.html", {"user": user})
+    posts = Post.objects.filter(user=user)
+    return render(request, "core_app/profile.html", {"user": user, "posts": posts})
 
 
 @login_required

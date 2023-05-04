@@ -4,17 +4,43 @@
 {% block title %} {{ user.username }} {% endblock %}
 
 {% block content %}
+<div class="flex flex-col justify-start flex-grow h-full w-full">
+    
+    <div class="px-6 py-4 justify-start flex flex-col md:flex-row w-full items-center rounded text-gray-800 bg-gray-200 bg-opacity-40">
+        <div class="rounded-xl flex items-center mr-6 h-full">
+            <img src="{{ user.profile.profile_image.url }}" alt="" class="object-fill h-20 md:h-40 object-center rounded-xl max-w-max aspect-square shadow">
+        </div>
+        <div class="ml-0 md:ml-4 p-4 flex flex-col justify-start w-full">
+            <p class="text-3xl font-semibold mb-4">@{{ user.username }}</p>
+            <span class="text-lg w-full mr-2 mb-2">{{ user.profile.first_name }}&nbsp;{{ user.profile.last_name }}</span>
+            <p class="text-lg italic w-full text-bold pt-2 border-t border-gray-700">{{ user.profile.bio }}</p>
+        </div>
+        {% if request.user == user %}
+            <a href="{% url 'core_app:update_profile' %}" class="py-2 px-4 mt-2 text-lg bg-purple-500 hover:bg-purple-700 shadow-xl rounded-xl text-white">Edit</a>
+        {% endif %}
+    </div>
 
-<div class="px-6 py-4 shadow justify-start flex flex-col md:flex-row w-full items-center bg-gray-200 rounded text-gray-800">
-    <div class="rounded-xl flex items-center mr-6 h-full">
-          <img src="{{ user.profile.profile_image.url }}" alt="" class="object-fill h-20 md:h-40 object-center rounded-xl max-w-max aspect-square shadow">
+    <h1 class="text-3xl text-gray-100 font-semibold m-4 text-center">Latest Posts</h1>
+
+    <div class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+    {% for post in posts %}
+        <a href="{% url 'postsapp:show_post' post.id %}" class="mt-4 py-2 shadow-xl bg-opacity-80 justify-between flex w-full items-center bg-gray-100 hover:bg-blue-300 rounded">
+            <div class="ml-4 rounded-2xl flex mt-6 mr-4 h-full">
+                <img src="{{ post.user.profile.profile_image.url }}" alt="" class="object-fill h-20 object-center rounded-xl max-w-max aspect-square shadow">
+            </div>
+            <div class="mr-8 p-2 flex flex-col justify-between w-full">
+                <div class="flex flex-row justify-between w-full">
+                    <p class="text-xl font-semibold mb-2">@{{ post.user.username }}</p>
+                    <p class="text-sm italic font-bold pt-2 text-blue-600 ">{{ post.created_at }}</p>    
+                </div>
+                {% if post.caption|length > 20 %}
+                    <p class="text-lg mr-2 border-t border-gray-700 pt-2">{{ post.caption|slice:"0:20" }}...<span class="text-md pt-2 font-semibold text-teal-600">show</span></p>
+                {% else %}
+                    <p class="text-lg mr-2 border-t border-gray-700 pt-2">{{ post.caption }}</p>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
     </div>
-    <div class="ml-0 md:ml-4 p-4 flex flex-col justify-start w-full">
-        <p class="text-3xl font-semibold mb-4">@{{ user.username }}</p>
-        <span class="text-lg w-full mr-2 mb-2">{{ user.profile.first_name }}&nbsp;{{ user.profile.last_name }}</span>
-        <p class="text-lg italic w-full text-bold pt-2 border-t border-gray-700">{{ user.profile.bio }}</p>
-    </div>
-    <a href="{% url 'core_app:update_profile' %}" class="py-2 px-4 mt-2 text-lg bg-blue-500 hover:bg-blue-700 rounded-xl text-white">Edit</a>
 </div>
-
 {% endblock %}
